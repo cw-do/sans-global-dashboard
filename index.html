@@ -372,111 +372,6 @@
             transform: scale(1.05);
         }
         
-        .update-btn {
-            background: linear-gradient(45deg, #1dd1a1, #10ac84);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .update-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(29, 209, 161, 0.3);
-        }
-        
-        .deadlines-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .deadlines-header h3 {
-            color: #00d4ff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0;
-        }
-        
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: #1a1a2e;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-header h3 {
-            color: #00d4ff;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .modal p {
-            color: #aaa;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        
-        .modal .github-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(45deg, #6e5494, #4a3f6b);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .modal .github-btn:hover {
-            transform: scale(1.05);
-        
         footer {
             background: rgba(0, 0, 0, 0.3);
             padding: 40px 20px;
@@ -582,12 +477,8 @@
     </div>
 
     <section class="deadlines-banner" id="proposals">
-        <div class="deadlines-header">
-            <h3>⏰ Upcoming Proposal Deadlines</h3>
-            <button class="update-btn" onclick="openUpdateModal()">
-                📬 Submit Deadline Update
-            </button>
-        </div>
+        <h3>⏰ Upcoming Proposal Deadlines</h3>
+        <div class="deadline-cards">
         <div class="deadline-cards">
             <div class="deadline-card urgent">
                 <div class="facility">ORNL (USA)</div>
@@ -1602,28 +1493,6 @@
         </section>
     </main>
 
-    <!-- Update Modal -->
-    <div class="modal" id="updateModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📬 Submit Deadline Update</h3>
-                <button class="modal-close" onclick="closeUpdateModal()">&times;</button>
-            </div>
-            <p>Help keep our deadline information accurate! Submit updates via GitHub:</p>
-            <p><strong>How to submit:</strong></p>
-            <ol style="color: #aaa; margin-bottom: 20px; padding-left: 20px;">
-                <li>Click the button below to go to GitHub Issues</li>
-                <li>Click "New Issue"</li>
-                <li>Provide: Facility name, deadline date, and cycle info</li>
-            </ol>
-            <a href="https://github.com/cw-do/sans-global-dashboard/issues/new?title=Deadline%20Update%3A%20[FACILITY%20NAME]&body=Facility%3A%20%0ADeadline%20Date%3A%20%0ACycle%20Info%3A%20%0ASource%20URL%3A%20" class="github-btn" target="_blank">
-                <svg height="20" width="20" viewBox="0 0 16 16" fill="white">
-                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-                </svg>
-                Submit via GitHub Issue
-            </a>
-        </div>
-    </div>
 
     <footer>
         <div class="footer-links">
@@ -1661,23 +1530,6 @@
             }
         });
         
-        });
-        
-        // Modal functions
-        function openUpdateModal() {
-            document.getElementById('updateModal').classList.add('active');
-        }
-        
-        function closeUpdateModal() {
-            document.getElementById('updateModal').classList.remove('active');
-        }
-        
-        // Close modal on outside click
-        document.getElementById('updateModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeUpdateModal();
-            }
-        });
     </script>
 </body>
 </html>
