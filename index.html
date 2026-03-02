@@ -467,10 +467,11 @@
         }
         
         .leaflet-popup-content-wrapper {
-            background: #1a1a2e;
+            background: rgba(26, 26, 46, 0.95);
             color: #e4e4e4;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         
         .leaflet-popup-content {
@@ -488,6 +489,10 @@
         }
         
         .leaflet-popup-tip {
+            background: rgba(26, 26, 46, 0.95);
+        }
+        
+        .leaflet-container {
             background: #1a1a2e;
         }
         
@@ -1595,8 +1600,8 @@
         // Initialize the map
         const map = L.map('global-map').setView([30, 0], 2);
         
-        // Add OpenStreetMap tiles with dark theme
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 19
@@ -1742,22 +1747,24 @@
                     className: 'custom-marker',
                     html: `<div style="
                         background: ${facility.color};
-                        width: 20px;
-                        height: 20px;
+                        width: 28px;
+                        height: 28px;
                         border-radius: 50%;
-                        border: 2px solid white;
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                        border: 3px solid #fff;
+                        box-shadow: 0 3px 10px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.3);
                     "></div>`,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10]
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
                 })
             }).addTo(map);
             
             // Add popup with facility info
             marker.bindPopup(`
-                <h4>${facility.name}</h4>
-                <p><strong>📍 ${facility.location}</strong></p>
-                <p>Instruments: ${facility.instruments.join(', ')}</p>
+                <div style="min-width: 150px;">
+                    <h4 style="margin: 0 0 8px 0; color: #00d4ff; font-size: 1rem;">${facility.name}</h4>
+                    <p style="margin: 0 0 4px 0; font-size: 0.85rem;"><strong>📍 ${facility.location}</strong></p>
+                    <p style="margin: 0; font-size: 0.8rem; color: #666;">Instruments: ${facility.instruments.join(', ')}</p>
+                </div>
             `);
         });
     </script>
