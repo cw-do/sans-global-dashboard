@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global SANS Instruments Gateway | Small Angle Neutron Scattering</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -441,6 +443,81 @@
         .instrument-card:nth-child(2) { animation-delay: 0.2s; }
         .instrument-card:nth-child(3) { animation-delay: 0.3s; }
         .instrument-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        /* Map Styles */
+        #map-section {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        #map-section h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #global-map {
+            height: 450px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            background: #1a1a2e;
+            color: #e4e4e4;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .leaflet-popup-content {
+            margin: 12px 15px;
+        }
+        
+        .leaflet-popup-content h4 {
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+        
+        .leaflet-popup-content p {
+            margin: 3px 0;
+            font-size: 0.9rem;
+        }
+        
+        .leaflet-popup-tip {
+            background: #1a1a2e;
+        }
+        
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .legend-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-marker.americas { background: linear-gradient(45deg, #ff6b6b, #feca57); }
+        .legend-marker.europe { background: linear-gradient(45deg, #00d4ff, #48dbfb); }
+        .legend-marker.asia-pacific { background: linear-gradient(45deg, #ff9ff3, #f368e0); }
+        .legend-marker.other { background: linear-gradient(45deg, #1dd1a1, #10ac84); }
     </style>
 </head>
 <body>
@@ -478,27 +555,29 @@
 
     <section class="deadlines-banner" id="proposals">
         <h3>⏰ Upcoming Proposal Deadlines</h3>
-        <div class="deadline-cards">
-        <div class="deadline-cards">
-            <div class="deadline-card urgent">
-                <div class="facility">ORNL (USA)</div>
-                <div class="date">March 4, 2026</div>
-                <div class="cycle">2026-B General User Proposal Call</div>
+        </div>
+    </section>
+
+    <!-- Global Map Section -->
+    <section id="map-section">
+        <h3>🗺️ SANS Facilities Worldwide</h3>
+        <div id="global-map"></div>
+        <div class="map-legend">
+            <div class="legend-item">
+                <div class="legend-marker americas"></div>
+                <span>Americas</span>
             </div>
-            <div class="deadline-card urgent">
-                <div class="facility">ANSTO (Australia)</div>
-                <div class="date">March 16, 2026</div>
-                <div class="cycle">2026-2 ACNS & NDF Merit Access Round</div>
+            <div class="legend-item">
+                <div class="legend-marker europe"></div>
+                <span>Europe</span>
             </div>
-            <div class="deadline-card">
-                <div class="facility">ILL (France)</div>
-                <div class="date">September 2026</div>
-                <div class="cycle">Fall Proposal Deadline</div>
+            <div class="legend-item">
+                <div class="legend-marker asia-pacific"></div>
+                <span>Asia-Pacific</span>
             </div>
-            <div class="deadline-card">
-                <div class="facility">NIST (USA)</div>
-                <div class="date">Check Website</div>
-                <div class="cycle">Semi-annual Calls</div>
+            <div class="legend-item">
+                <div class="legend-marker other"></div>
+                <span>Other</span>
             </div>
         </div>
     </section>
@@ -1508,28 +1587,179 @@
         </p>
     </footer>
 
+    </script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        function searchInstruments() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.instrument-card');
-            
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if (query === '' || text.includes(query)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+        // Initialize the map
+        const map = L.map('global-map').setView([30, 0], 2);
+        
+        // Add OpenStreetMap tiles with dark theme
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Custom marker icons by region
+        function createMarker(color) {
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="
+                    background: ${color};
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                "></div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
             });
         }
         
-        // Add enter key support for search
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchInstruments();
+        // Facility locations with instruments
+        const facilities = [
+            // Americas
+            {
+                name: 'ORNL (SNS/HFIR)',
+                location: 'Oak Ridge, Tennessee, USA',
+                lat: 35.9312,
+                lng: -84.3104,
+                instruments: ['EQ-SANS', 'GP-SANS', 'BIO-SANS', 'USANS'],
+                region: 'americas',
+                color: 'linear-gradient(45deg, #ff6b6b, #feca57)'
+            },
+            {
+                name: 'NIST NCNR',
+                location: 'Gaithersburg, Maryland, USA',
+                lat: 39.1319,
+                lng: -77.2207,
+                instruments: ['NG7 30m SANS', 'NGB 30m SANS', 'VSANS', 'BT5 USANS'],
+                region: 'americas',
+                color: 'linear-gradient(45deg, #ff6b6b, #feca57)'
+            },
+            // Europe
+            {
+                name: 'ILL',
+                location: 'Grenoble, France',
+                lat: 45.4045,
+                lng: 5.7709,
+                instruments: ['D11', 'D22', 'D33'],
+                region: 'europe',
+                color: 'linear-gradient(45deg, #00d4ff, #48dbfb)'
+            },
+            {
+                name: 'ISIS',
+                location: 'Didcot, Oxfordshire, UK',
+                lat: 51.5743,
+                lng: -1.3135,
+                instruments: ['LOQ', 'SANS2D', 'ZOOM'],
+                region: 'europe',
+                color: 'linear-gradient(45deg, #00d4ff, #48dbfb)'
+            },
+            {
+                name: 'MLZ/FRM II',
+                location: 'Garching, Germany',
+                lat: 48.2658,
+                lng: 11.6725,
+                instruments: ['KWS-1', 'KWS-2', 'KWS-3'],
+                region: 'europe',
+                color: 'linear-gradient(45deg, #00d4ff, #48dbfb)'
+            },
+            {
+                name: 'PSI',
+                location: 'Villigen, Switzerland',
+                lat: 47.5369,
+                lng: 8.2272,
+                instruments: ['SANS-I', 'SANS-II'],
+                region: 'europe',
+                color: 'linear-gradient(45deg, #00d4ff, #48dbfb)'
+            },
+            {
+                name: 'BNC',
+                location: 'Budapest, Hungary',
+                lat: 47.4979,
+                lng: 19.0402,
+                instruments: ['FSANS'],
+                region: 'europe',
+                color: 'linear-gradient(45deg, #00d4ff, #48dbfb)'
+            },
+            // Asia-Pacific
+            {
+                name: 'ANSTO',
+                location: 'Lucas Heights, NSW, Australia',
+                lat: -34.0487,
+                lng: 150.9801,
+                instruments: ['QUOKKA', 'BILBY'],
+                region: 'asia-pacific',
+                color: 'linear-gradient(45deg, #ff9ff3, #f368e0)'
+            },
+            {
+                name: 'HANARO',
+                location: 'Daejeon, South Korea',
+                lat: 36.3504,
+                lng: 127.3845,
+                instruments: ['40m SANS'],
+                region: 'asia-pacific',
+                color: 'linear-gradient(45deg, #ff9ff3, #f368e0)'
+            },
+            {
+                name: 'J-PARC/JRR-3',
+                location: 'Tokai, Japan',
+                lat: 36.4611,
+                lng: 140.6053,
+                instruments: ['TAIKAN', 'SANS-U', 'SANS-J'],
+                region: 'asia-pacific',
+                color: 'linear-gradient(45deg, #ff9ff3, #f368e0)'
+            },
+            {
+                name: 'CSNS',
+                location: 'Dongguan, China',
+                lat: 22.9452,
+                lng: 113.9377,
+                instruments: ['SANS'],
+                region: 'asia-pacific',
+                color: 'linear-gradient(45deg, #ff9ff3, #f368e0)'
+            },
+            // Other
+            {
+                name: 'McMaster Nuclear Reactor',
+                location: 'Hamilton, Ontario, Canada',
+                lat: 43.2609,
+                lng: -79.9192,
+                instruments: ['MacSANS'],
+                region: 'other',
+                color: 'linear-gradient(45deg, #1dd1a1, #10ac84)'
             }
-        });
+        ];
         
+        // Add markers for each facility
+        facilities.forEach(facility => {
+            const marker = L.marker([facility.lat, facility.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="
+                        background: ${facility.color};
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        border: 2px solid white;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                    "></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                })
+            }).addTo(map);
+            
+            // Add popup with facility info
+            marker.bindPopup(`
+                <h4>${facility.name}</h4>
+                <p><strong>📍 ${facility.location}</strong></p>
+                <p>Instruments: ${facility.instruments.join(', ')}</p>
+            `);
+        });
     </script>
 </body>
 </html>
