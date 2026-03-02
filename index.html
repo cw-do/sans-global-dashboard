@@ -372,27 +372,110 @@
             transform: scale(1.05);
         }
         
-        .scientist-info {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
+        .update-btn {
+            background: linear-gradient(45deg, #1dd1a1, #10ac84);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
         }
         
-        .scientist-info .label {
-            font-size: 0.75rem;
-            color: #888;
+        .update-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(29, 209, 161, 0.3);
         }
         
-        .scientist-info .name {
+        .deadlines-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .deadlines-header h3 {
             color: #00d4ff;
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
         }
         
-        .scientist-info .email {
-            font-size: 0.85rem;
-            color: #aaa;
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            color: #00d4ff;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal p {
+            color: #aaa;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .modal .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(45deg, #6e5494, #4a3f6b);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .modal .github-btn:hover {
+            transform: scale(1.05);
         
         footer {
             background: rgba(0, 0, 0, 0.3);
@@ -488,7 +571,7 @@
     <section class="hero">
         <h2>Find SANS Instruments Worldwide</h2>
         <p>Your comprehensive gateway to Small Angle Neutron Scattering facilities around the world. 
-        Browse instrument specifications, check beamtime proposal deadlines, and connect with instrument scientists.</p>
+        Browse instrument specifications and check beamtime proposal deadlines.</p>
     </section>
 
     <div class="search-section">
@@ -499,8 +582,18 @@
     </div>
 
     <section class="deadlines-banner" id="proposals">
-        <h3>⏰ Upcoming Proposal Deadlines</h3>
+        <div class="deadlines-header">
+            <h3>⏰ Upcoming Proposal Deadlines</h3>
+            <button class="update-btn" onclick="openUpdateModal()">
+                📬 Submit Deadline Update
+            </button>
+        </div>
         <div class="deadline-cards">
+            <div class="deadline-card urgent">
+                <div class="facility">ORNL (USA)</div>
+                <div class="date">March 4, 2026</div>
+                <div class="cycle">2026-B General User Proposal Call</div>
+            </div>
             <div class="deadline-card urgent">
                 <div class="facility">ANSTO (Australia)</div>
                 <div class="date">March 16, 2026</div>
@@ -508,17 +601,12 @@
             </div>
             <div class="deadline-card">
                 <div class="facility">ILL (France)</div>
-                <div class="date">February 16, 2026</div>
-                <div class="cycle">Standard Proposal Deadline</div>
-            </div>
-            <div class="deadline-card">
-                <div class="facility">ORNL (USA)</div>
-                <div class="date">Check Website</div>
-                <div class="cycle">Spring/Fall Proposal Calls</div>
+                <div class="date">September 2026</div>
+                <div class="cycle">Fall Proposal Deadline</div>
             </div>
             <div class="deadline-card">
                 <div class="facility">NIST (USA)</div>
-                <div class="date">To Be Announced</div>
+                <div class="date">Check Website</div>
                 <div class="cycle">Semi-annual Calls</div>
             </div>
         </div>
@@ -561,10 +649,6 @@
                                     <div class="spec-label">Detector</div>
                                     <div class="spec-value">1m × 1m 3He</div>
                                 </div>
-                            </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">William T. Heller</div>
                             </div>
                             <div class="instrument-links">
                                 <a href="https://neutrons.ornl.gov/eqsans" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
@@ -627,10 +711,6 @@
                                     <div class="spec-label">Specialty</div>
                                     <div class="spec-value">Biology, Soft Matter</div>
                                 </div>
-                            </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">Volker S. Urban</div>
                             </div>
                             <div class="instrument-links">
                                 <a href="https://www.ornl.gov/content/bio-sans-capabilities" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
@@ -700,11 +780,6 @@
                                     <div class="spec-label">Detector</div>
                                     <div class="spec-value">64 × 64 cm 3He</div>
                                 </div>
-                            </div>
-                            <div class="scientist-info">
-                                <div class="label">Contact</div>
-                                <div class="name">Paul Butler</div>
-                                <div class="email">paul.butler@nist.gov</div>
                             </div>
                             <div class="instrument-links">
                                 <a href="https://www.nist.gov/ncnr/ng7-sans-small-angle-neutron-scattering" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
@@ -846,10 +921,6 @@
                                     <div class="spec-value">96 × 96 cm 3He</div>
                                 </div>
                             </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">Ralf Schweins</div>
-                            </div>
                             <div class="instrument-links">
                                 <a href="https://www.ill.eu/for-ill-users/instruments/instruments-list/d11" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
                                 <a href="https://www.ill.eu/for-ill-users/applying-for-beamtime/standard-access" class="btn btn-secondary" target="_blank">📝 Proposals</a>
@@ -881,10 +952,6 @@
                                     <div class="spec-value">96 × 96 cm</div>
                                 </div>
                             </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">Anne Martel</div>
-                            </div>
                             <div class="instrument-links">
                                 <a href="https://www.ill.eu/for-ill-users/instruments/instruments-list/d22" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
                                 <a href="https://www.ill.eu/for-ill-users/applying-for-beamtime/standard-access" class="btn btn-secondary" target="_blank">📝 Proposals</a>
@@ -915,10 +982,6 @@
                                     <div class="spec-label">Specialty</div>
                                     <div class="spec-value">Kinetics</div>
                                 </div>
-                            </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">Isabelle Grillo</div>
                             </div>
                             <div class="instrument-links">
                                 <a href="https://www.ill.eu/for-ill-users/instruments/instruments-list/d33" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
@@ -1227,10 +1290,6 @@
                                     <div class="spec-value">Time-of-Flight</div>
                                 </div>
                             </div>
-                            <div class="scientist-info">
-                                <div class="label">Contact</div>
-                                <div class="email">fsans@bnc.hu</div>
-                            </div>
                             <div class="instrument-links">
                                 <a href="https://bnc.hu/fsans/" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
                                 <a href="https://bnc.hu/" class="btn btn-secondary" target="_blank">📝 Proposals</a>
@@ -1278,10 +1337,6 @@
                                     <div class="spec-value">100 × 100 cm</div>
                                 </div>
                             </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">Elliott Gilbert</div>
-                            </div>
                             <div class="instrument-links">
                                 <a href="https://www.ansto.gov.au/facilities/australian-centre-for-neutron-scattering/neutron-scattering-instruments/quokka-small" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
                                 <a href="https://www.ansto.gov.au/facilities/australian-centre-for-neutron-scattering/call-for-proposals" class="btn btn-secondary" target="_blank">📝 Proposals</a>
@@ -1312,11 +1367,6 @@
                                     <div class="spec-label">Detector</div>
                                     <div class="spec-value">Multi-detector</div>
                                 </div>
-                            </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">Anna Sokolova</div>
-                                <div class="email">anna.sokolova@ansto.gov.au</div>
                             </div>
                             <div class="instrument-links">
                                 <a href="https://www.ansto.gov.au/facilities/australian-centre-for-neutron-scattering/neutron-scattering-instruments/bilby-small" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
@@ -1355,10 +1405,6 @@
                                     <div class="spec-label">Feature Range</div>
                                     <div class="spec-value">1 - 500 nm</div>
                                 </div>
-                            </div>
-                            <div class="scientist-info">
-                                <div class="label">Instrument Scientist</div>
-                                <div class="name">Sung-Min Choi</div>
                             </div>
                             <div class="instrument-links">
                                 <a href="https://www.kaeri.re.kr/hanaro/board?menuId=MENU01112" class="btn btn-primary" target="_blank">📖 Instrument Page</a>
@@ -1556,6 +1602,29 @@
         </section>
     </main>
 
+    <!-- Update Modal -->
+    <div class="modal" id="updateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📬 Submit Deadline Update</h3>
+                <button class="modal-close" onclick="closeUpdateModal()">&times;</button>
+            </div>
+            <p>Help keep our deadline information accurate! Submit updates via GitHub:</p>
+            <p><strong>How to submit:</strong></p>
+            <ol style="color: #aaa; margin-bottom: 20px; padding-left: 20px;">
+                <li>Click the button below to go to GitHub Issues</li>
+                <li>Click "New Issue"</li>
+                <li>Provide: Facility name, deadline date, and cycle info</li>
+            </ol>
+            <a href="https://github.com/cw-do/sans-global-dashboard/issues/new?title=Deadline%20Update%3A%20[FACILITY%20NAME]&body=Facility%3A%20%0ADeadline%20Date%3A%20%0ACycle%20Info%3A%20%0ASource%20URL%3A%20" class="github-btn" target="_blank">
+                <svg height="20" width="20" viewBox="0 0 16 16" fill="white">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+                Submit via GitHub Issue
+            </a>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-links">
             <a href="#americas">Americas</a>
@@ -1592,18 +1661,22 @@
             }
         });
         
-        // Smooth scrolling for navigation
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+        });
+        
+        // Modal functions
+        function openUpdateModal() {
+            document.getElementById('updateModal').classList.add('active');
+        }
+        
+        function closeUpdateModal() {
+            document.getElementById('updateModal').classList.remove('active');
+        }
+        
+        // Close modal on outside click
+        document.getElementById('updateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeUpdateModal();
+            }
         });
     </script>
 </body>
